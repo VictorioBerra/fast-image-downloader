@@ -7,13 +7,15 @@ var codes = {
 	3: 'Error during download',
 	4: 'Timeout exceeded',
 	5: 'Invalid URL protocol',
-	6: 'Unknown error'
+	6: 'Unknown error',
+	7: 'Max filesize exceeded'
 };
 
-function loadImage(url, timeout, types, reqOpts, callback) {
+function loadImage(url, timeout, types, maxFileSize, reqOpts, callback) {
 	var chunks = [];
 	var statusCode;
 	var fileType;
+	var fileSize = 0;
 	var finished = false;
 	var returnFinished = function() { return finished; }
 
@@ -37,6 +39,10 @@ function loadImage(url, timeout, types, reqOpts, callback) {
 						}
 					}
 					chunks.push(chunk);
+					fileSize += chunk.length;
+					if (maxFileSize && fileSize > maxFileSize) {
+						return finishDownload(7);
+					}
 				})
 				.on('response', function(response){
 					statusCode = response.statusCode;

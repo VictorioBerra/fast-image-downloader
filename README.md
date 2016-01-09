@@ -15,9 +15,10 @@ var fid = require('fast-image-downloader');
 
 var TIMEOUT = 2000;	// timeout in ms
 var ALLOWED_TYPES = ['jpg', 'png'];	// allowed image types
+var MAX_FILESIZE = 0; // max filesize in bytes (0 means any size)
 var REQ_OPTS = {strictSSL: false};	// Optional: Can be any valid options for the node request module
 
-fid('http://example.com/image.jpg', TIMEOUT, ALLOWED_TYPES, REQ_OPTS, function(err, data){
+fid('http://example.com/image.jpg', TIMEOUT, ALLOWED_TYPES, MAX_FILESIZE, REQ_OPTS, function(err, data){
 	if (err) {
 		// err will contain code, message, download time, file type (if known), and HTTP status code (if known)
 		console.log(err.error);

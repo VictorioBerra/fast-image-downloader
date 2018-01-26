@@ -30,6 +30,23 @@ function loadImage(url, timeout, types, maxFileSize, reqOpts, callback) {
 
 	try {
 		var start = new Date();
+		
+		// Quick exit
+		if(maxFileSize) {
+			request({
+			    url: url,
+			    method: "HEAD"
+			}, function(err, headRes) {
+				if(err) {
+					finishDownload(3);
+				}
+			    var size = headRes.headers['content-length'];
+			    if (size > maxFileSize) {
+			        return finishDownload(7);
+			    }
+			});
+		}
+		
 		var r = request.get(url, reqOpts)
 				.on('data', function(chunk){
 					if (!chunks.length) {
